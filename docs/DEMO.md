@@ -4,6 +4,19 @@ Device: an emulator or phone running **Android 16 QPR+ / Android 17 with the `ap
 The first Android 16 GA image (May 2025 build) has the service but **not** the shell command:
 `adb shell cmd app_function help` answers `No shell command implementation.` There the adb part cannot work.
 Checked image: `system-images;android-37.0;google_apis;arm64-v8a` (userdebug, root: needed by the Testing Agent).
+On it `cmd app_function help` works and lists `list-app-functions [--package]`, `execute-app-function` (`--timeout-duration`,
+`--brief-yaml`, `--pending-intent-path`), `set-enabled`, `is-enabled`, `purge-allowlist-cache`. The AppFunctions
+flags are already `true` (`device_config list | grep app_function`).
+
+### Emulator notes (macOS arm64, emulator 37.2.12, observed 2026-10-11)
+- The API 37.0 AVD gets **no HVF** unless you add `-qemu -enable-hvf` (the front-end prints `hvf is not enabled on this
+  aarch64 host` and falls back to software emulation, which hangs). Android 16 AVDs get `-enable-hvf` automatically.
+- Booting works with `-gpu host` but `surfaceflinger` then **crash-loops** every ~5 s:
+  `Assertion failed: !rcEnc->featureInfo()->hasReadColorBufferDma` in `GoldfishMapper::readFromHost`.
+  Tried without success: `-gpu swiftshader_indirect`, `-feature -GLDMA,-GLDMA2`. `-gpu guest` is unsupported by the image.
+- The AVD needs ~1.2x its data partition free on the host (`-partition-size` / `disk.dataPartition.size`, note the
+  config file uses ` = ` with spaces for some AVDs). Keep >= 10 GB free.
+- Fallback: a physical device on Android 16 QPR / 17 with the `app_function` shell command.
 
 ## Before going on stage
 ```bash

@@ -17,7 +17,8 @@ run() { # run <function> <json-parameters>
 
 case "${1:-help}" in
   check)     $ADB shell cmd app_function help ;;
-  list)      $ADB shell cmd app_function list-app-functions | grep --after-context 10 "$PKG" ;;
+  list)      $ADB shell cmd app_function list-app-functions --package "$PKG" ;;
+  enabled)   $ADB shell cmd app_function is-enabled --package "$PKG" --function "$SVC#${2:?function name}" ;;
   search)    run searchTalks "{\"track\": \"${2:-android}\"${3:+, \"after\": \"$3\"}}" ;;
   favourites) run getFavourites '{}' ;;
   add)       shift; ids=$(printf '"%s",' "$@"); run addToFavorites "{\"talkIds\": [${ids%,}]}" ;;
@@ -27,7 +28,7 @@ case "${1:-help}" in
   enable)    $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state enable ;;
   reset)     $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state default ;;
   *) cat <<USAGE
-check | list | search [track] [after HH:mm] | favourites | add <id>... | clear | stop | disable|enable|reset <function>
+check | list | enabled <function> | search [track] [after HH:mm] | favourites | add <id>... | clear | stop | disable|enable|reset <function>
 USAGE
   ;;
 esac
