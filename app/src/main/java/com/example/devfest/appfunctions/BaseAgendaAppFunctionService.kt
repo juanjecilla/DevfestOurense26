@@ -35,8 +35,8 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      * Search the DevFest Ourense agenda by track and start time.
      * Required workflow: Call this before "addToFavorites" to obtain valid talk IDs.
      *
-     * @param track Track name: "android", "web", "cloud", "ai" or "general". Case-insensitive. If null, searches all tracks.
-     * @param after Earliest start time, local to the event, for example 14:00. If null, returns the whole day.
+     * @param track Track: "android", "web", "cloud", "ai" or "general". Null searches all.
+     * @param after Earliest start time, local to the event, e.g. 14:00. Null: whole day.
      * @return Talks ordered by start time. Empty list when nothing matches.
      */
     @AppFunction(isDescribedByKDoc = true)
@@ -49,7 +49,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
 
     /**
      * List the talks the user saved as favourites, ordered by start time.
-     * Use it to report what is saved or to check overlaps with the user's other commitments.
+     * Use it to report what is saved or to check overlaps with other commitments.
      *
      * @return Favourite talks. Empty list when none is saved.
      */
@@ -62,7 +62,8 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      * Save talks to the user's favourites. Adding a talk that is already saved changes nothing.
      * Required workflow: Call "searchTalks" first to obtain valid talk IDs.
      *
-     * @param talkIds Talk IDs returned by "searchTalks", at most 20 per call. If an ID is unknown the call fails and nothing is saved.
+     * @param talkIds IDs returned by "searchTalks", at most 20 per call.
+     *   If an ID is unknown the call fails and nothing is saved.
      * @return Number of talks newly added and total favourites after the call.
      */
     @AppFunction(isDescribedByKDoc = true)
