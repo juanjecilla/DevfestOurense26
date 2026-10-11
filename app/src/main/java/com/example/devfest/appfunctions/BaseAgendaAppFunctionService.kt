@@ -29,10 +29,12 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     @Inject internal lateinit var repository: TalkRepository
 
     /**
-     * Searches talks.
+     * Search the DevFest Ourense agenda by track and start time.
+     * Required workflow: Call this before "addToFavorites" to obtain valid talk IDs.
      *
-     * @param track Track.
-     * @param after Start time.
+     * @param track Track name: "android", "web", "cloud", "ai" or "general". Case-insensitive. If null, searches all tracks.
+     * @param after Earliest start time, local to the event, for example 14:00. If null, returns the whole day.
+     * @return Talks ordered by start time. Empty list when nothing matches.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun searchTalks(
@@ -43,7 +45,10 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     }
 
     /**
-     * Gets favourites.
+     * List the talks the user saved as favourites, ordered by start time.
+     * Use it to report what is saved or to check overlaps with the user's other commitments.
+     *
+     * @return Favourite talks. Empty list when none is saved.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun getFavourites(): List<Talk> = withContext(Dispatchers.IO) {
@@ -52,9 +57,11 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     }
 
     /**
-     * Adds favourites.
+     * Save talks to the user's favourites. Adding a talk that is already saved changes nothing.
+     * Required workflow: Call "searchTalks" first to obtain valid talk IDs.
      *
-     * @param talkIds Talk ids.
+     * @param talkIds Talk IDs returned by "searchTalks". If an ID is unknown the call fails and nothing is saved.
+     * @return Number of talks newly added and total favourites after the call.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun addToFavorites(talkIds: List<String>): FavouritesResult = withContext(Dispatchers.IO) {
@@ -66,7 +73,10 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     }
 
     /**
-     * Clears favourites.
+     * Remove every favourite talk. Irreversible.
+     * Requires confirmation: ask the user to confirm before calling this function.
+     *
+     * @return Result with zero favourites.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun clearFavorites(): FavouritesResult = withContext(Dispatchers.IO) {

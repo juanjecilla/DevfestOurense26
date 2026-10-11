@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/androidx.appfunctions"
-    appfn:description="This app shows the DevFest Ourense agenda."
+    appfn:description="This app exposes the DevFest Ourense agenda and the user's favourite talks.
+
+    Operational Patterns:
+    - Use 'searchTalks' to resolve talks to IDs before calling 'addToFavorites'.
+    - Prefer one 'addToFavorites' call with several IDs over repeated calls.
+
+    Constraints:
+    - 'clearFavorites' is irreversible: confirm with the user before calling it.
+    - Times are local to the event."
     appfn:displayDescription="@string/appfunctions_description" />
