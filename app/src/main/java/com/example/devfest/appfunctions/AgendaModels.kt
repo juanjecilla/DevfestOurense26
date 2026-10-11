@@ -1,7 +1,6 @@
 package com.example.devfest.appfunctions
 
 import androidx.appfunctions.AppFunctionSerializable
-import java.time.LocalTime
 
 /** A talk in the DevFest Ourense agenda. */
 @AppFunctionSerializable(isDescribedByKDoc = true)
@@ -12,8 +11,8 @@ data class Talk(
     val title: String,
     /** Track name in lowercase: "android", "web", "cloud", "ai" or "general". */
     val track: String,
-    /** Start time, local to the event. */
-    val start: LocalTime,
+    /** Start time as HH:mm, local to the event. */
+    val start: String,
     /** Room name. */
     val room: String,
 )

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ADB helpers for the AppFunctions demo (skill step 4: testing and debugging).
-# Usage: scripts/appfunctions-adb.sh <command> [args]     SERIAL=emulator-5556 to pick a device.
+# Usage: scripts/appfunctions-adb.sh <command> [args]     SERIAL=<adb serial> to pick a device, YAML=1 for concise output.
 set -euo pipefail
 
 PKG="${PKG:-com.example.devfest}"
@@ -11,7 +11,7 @@ ADB="${ADB:-adb}"
 run() { # run <function> <json-parameters>
   $ADB shell "cmd app_function execute-app-function \
       --package $PKG \
-      --function '$SVC#$1' \
+      --function '$SVC#$1' ${YAML:+--brief-yaml} \
       --parameters '$2'"
 }
 

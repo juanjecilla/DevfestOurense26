@@ -18,6 +18,17 @@ flags are already `true` (`device_config list | grep app_function`).
   config file uses ` = ` with spaces for some AVDs). Keep >= 10 GB free.
 - Fallback: a physical device on Android 16 QPR / 17 with the `app_function` shell command.
 
+## Verified (2026-10-11)
+Pixel 9 Pro, Android 17 (API 37.1, patch 2026-09-05, **user build**, no root). Debug APK from `main`, alpha10:
+`list` (document type `AppFunctionStaticMetadata-<package>`), `search`, `add`, idempotent `add`, `favourites`,
+`clear` with and without `confirmed`, app force-stopped and woken by the call, `disable` / `enabled` / `reset`.
+Error codes seen: `1001` invalid argument, `1002` disabled, `1500` element not found, `1501` limit exceeded.
+Not verified: the Testing Agent (`run_privileged.sh` needs a rootable device) and Gemini (EAP).
+
+**Alpha10 gotcha:** `java.time.LocalTime` as an *input* fails (`Unable to deserialize class java.time.LocalTime`) and as an
+*output* is serialized as an object `{hour, minute, second, nanoOfSecond}`. The demo uses `"HH:mm"` strings.
+The alpha13 changelog lists "Support all built-in proxy types (LocalDate, LocalTime, Instant, ZoneId)" as a fix.
+
 ## Before going on stage
 ```bash
 ./gradlew :app:installDebug
@@ -30,7 +41,7 @@ Open the app on the **Favourites** tab, then put it in the background.
 ## Beats (match the deck, scene 12)
 1. **Scenario**: the agenda app; four functions: `searchTalks`, `getFavourites`, `addToFavorites`, `clearFavorites`.
 2. **list**: `scripts/appfunctions-adb.sh list`
-3. **read**: `scripts/appfunctions-adb.sh search android 14:00`
+3. **read**: `scripts/appfunctions-adb.sh search android 14:00`  (`YAML=1` for compact output)
 4. **write**: `scripts/appfunctions-adb.sh add t08 t09` → open the app: favourites changed.
 5. **closed app**: `scripts/appfunctions-adb.sh stop`, then `search` again, same result.
 6. **errors / safety**: `add nope` (unknown id → `AppFunctionElementNotFoundException`);

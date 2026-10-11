@@ -15,6 +15,7 @@ import com.example.devfest.domain.UnknownTalkException
 import com.example.devfest.domain.Talk as DomainTalk
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime
+import java.time.format.DateTimeParseException
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -36,15 +37,20 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      * Required workflow: Call this before "addToFavorites" to obtain valid talk IDs.
      *
      * @param track Track: "android", "web", "cloud", "ai" or "general". Null searches all.
-     * @param after Earliest start time, local to the event, e.g. 14:00. Null: whole day.
+     * @param after Earliest start time as HH:mm, local to the event, e.g. "14:00". Null: whole day.
      * @return Talks ordered by start time. Empty list when nothing matches.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun searchTalks(
         track: String? = null,
-        after: LocalTime? = null,
+        after: String? = null,
     ): List<Talk> = withContext(Dispatchers.IO) {
-        searchTalksUseCase(track, after).map { it.toTalk() }
+        val from = try {
+            after?.let(LocalTime::parse)
+        } catch (e: DateTimeParseException) {
+            throw AppFunctionInvalidArgumentException("after must be HH:mm, for example 14:00")
+        }
+        searchTalksUseCase(track, from).map { it.toTalk() }
     }
 
     /**
@@ -99,5 +105,5 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
         const val MAX_IDS = 20
     }
 
-    private fun DomainTalk.toTalk() = Talk(id = id, title = title, track = track, start = start, room = room)
+    private fun DomainTalk.toTalk() = Talk(id = id, title = title, track = track, start = start.toString(), room = room)
 }
