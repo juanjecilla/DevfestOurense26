@@ -46,9 +46,11 @@ Open the app on the **Favourites** tab, then put it in the background.
 5. **closed app**: `scripts/appfunctions-adb.sh stop`, then `search` again, same result.
 6. **errors / safety**: `add nope` (unknown id → `AppFunctionElementNotFoundException`);
    `clear` is done with `confirmed = true`; without it the function refuses.
-7. **Testing Agent** (`github.com/android/appfunctions`, `agent/`, `./run_privileged.sh`): natural language over the same functions.
+7. **Testing Agent**: see `docs/TESTING-AGENT.md` (privileged via shell identity, LLM mode needs your own Gemini key).
 
 ## Backups
+- **Real captured outputs** of every adb step: `docs/captures/` (regenerate with `SERIAL=<serial> scripts/capture-demo.sh`
+  after changing the agenda or functions). The deck's backup scene is generated from them (`scripts/gen-code.py`).
 - Branches/tags are checkpoints: `git switch 02-appfunctions-skill` (skill output, minimal then refined KDoc),
   `git switch 01-base-agenda` (before AppFunctions).
-- Keep a screen recording or screenshots of each step in `docs/captures/` (add before the event).
+- Screen recording of the app UI changing after `add` (do it on the phone before the event).
