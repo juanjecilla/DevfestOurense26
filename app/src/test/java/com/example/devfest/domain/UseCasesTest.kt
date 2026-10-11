@@ -3,7 +3,6 @@ package com.example.devfest.domain
 import java.time.LocalTime
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class UseCasesTest {
@@ -35,7 +34,8 @@ class UseCasesTest {
     @Test
     fun `adding an unknown id is rejected and changes nothing`() = runTest {
         val add = AddToFavourites(repository)
-        assertThrows(IllegalArgumentException::class.java) { kotlinx.coroutines.runBlocking { add(listOf("a", "zzz")) } }
+        val error = runCatching { add(listOf("a", "zzz")) }.exceptionOrNull()
+        assertEquals(listOf("zzz"), (error as UnknownTalkException).ids)
         assertEquals(emptySet<String>(), repository.favouriteIds())
     }
 
@@ -44,5 +44,11 @@ class UseCasesTest {
         AddToFavourites(repository)(listOf("a", "b"))
         ClearFavourites(repository)()
         assertEquals(emptySet<String>(), repository.favouriteIds())
+    }
+
+    @Test
+    fun `favourites come back ordered by start time`() = runTest {
+        AddToFavourites(repository)(listOf("c", "a", "b"))
+        assertEquals(listOf("a", "b", "c"), GetFavourites(repository)().map { it.id })
     }
 }

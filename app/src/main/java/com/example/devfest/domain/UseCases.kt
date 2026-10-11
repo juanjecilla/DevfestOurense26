@@ -20,11 +20,22 @@ class ObserveFavouriteIds @Inject constructor(private val repository: TalkReposi
 /** Result of changing the favourites. */
 data class FavouritesChange(val added: Int, val total: Int)
 
+/** Some of the given talk ids do not exist. */
+class UnknownTalkException(val ids: List<String>) : IllegalArgumentException("Unknown talk ids: ${ids.joinToString()}")
+
+class GetFavourites @Inject constructor(private val repository: TalkRepository) {
+    /** Favourite talks ordered by start time. */
+    suspend operator fun invoke(): List<Talk> {
+        val ids = repository.favouriteIds()
+        return repository.search(track = null, after = null).filter { it.id in ids }
+    }
+}
+
 class AddToFavourites @Inject constructor(private val repository: TalkRepository) {
     /** Idempotent: adding a talk that is already a favourite changes nothing. Unknown ids are rejected. */
     suspend operator fun invoke(ids: Collection<String>): FavouritesChange {
         val unknown = ids.filter { repository.get(it) == null }
-        require(unknown.isEmpty()) { "Unknown talk ids: ${unknown.joinToString()}" }
+        if (unknown.isNotEmpty()) throw UnknownTalkException(unknown)
         val before = repository.favouriteIds()
         val after = repository.addFavourites(ids)
         return FavouritesChange(added = (after - before).size, total = after.size)

@@ -2,13 +2,16 @@ package com.example.devfest.appfunctions
 
 import androidx.annotation.RequiresApi
 import androidx.appfunctions.AppFunction
+import androidx.appfunctions.AppFunctionElementNotFoundException
 import androidx.appfunctions.AppFunctionInvalidArgumentException
+import androidx.appfunctions.AppFunctionLimitExceededException
 import androidx.appfunctions.AppFunctionService
 import androidx.appfunctions.AppFunctionServiceEntryPoint
 import com.example.devfest.domain.AddToFavourites
 import com.example.devfest.domain.ClearFavourites
+import com.example.devfest.domain.GetFavourites
 import com.example.devfest.domain.SearchTalks
-import com.example.devfest.domain.TalkRepository
+import com.example.devfest.domain.UnknownTalkException
 import com.example.devfest.domain.Talk as DomainTalk
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalTime
@@ -26,7 +29,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     @Inject internal lateinit var searchTalksUseCase: SearchTalks
     @Inject internal lateinit var addToFavouritesUseCase: AddToFavourites
     @Inject internal lateinit var clearFavouritesUseCase: ClearFavourites
-    @Inject internal lateinit var repository: TalkRepository
+    @Inject internal lateinit var getFavouritesUseCase: GetFavourites
 
     /**
      * Search the DevFest Ourense agenda by track and start time.
@@ -52,36 +55,45 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun getFavourites(): List<Talk> = withContext(Dispatchers.IO) {
-        val ids = repository.favouriteIds()
-        searchTalksUseCase().filter { it.id in ids }.map { it.toTalk() }
+        getFavouritesUseCase().map { it.toTalk() }
     }
 
     /**
      * Save talks to the user's favourites. Adding a talk that is already saved changes nothing.
      * Required workflow: Call "searchTalks" first to obtain valid talk IDs.
      *
-     * @param talkIds Talk IDs returned by "searchTalks". If an ID is unknown the call fails and nothing is saved.
+     * @param talkIds Talk IDs returned by "searchTalks", at most 20 per call. If an ID is unknown the call fails and nothing is saved.
      * @return Number of talks newly added and total favourites after the call.
      */
     @AppFunction(isDescribedByKDoc = true)
     suspend fun addToFavorites(talkIds: List<String>): FavouritesResult = withContext(Dispatchers.IO) {
+        if (talkIds.isEmpty()) throw AppFunctionInvalidArgumentException("talkIds must not be empty")
+        if (talkIds.size > MAX_IDS) throw AppFunctionLimitExceededException("At most $MAX_IDS ids per call")
         try {
             addToFavouritesUseCase(talkIds).let { FavouritesResult(it.added, it.total) }
-        } catch (e: IllegalArgumentException) {
-            throw AppFunctionInvalidArgumentException(e.message ?: "Invalid talk ids")
+        } catch (e: UnknownTalkException) {
+            throw AppFunctionElementNotFoundException("Talk not found for ID = ${e.ids.joinToString()}")
         }
     }
 
     /**
      * Remove every favourite talk. Irreversible.
-     * Requires confirmation: ask the user to confirm before calling this function.
+     * Requires confirmation: ask the user to confirm, then call with confirmed = true.
      *
+     * @param confirmed True only after the user explicitly agreed to clear all favourites.
      * @return Result with zero favourites.
      */
     @AppFunction(isDescribedByKDoc = true)
-    suspend fun clearFavorites(): FavouritesResult = withContext(Dispatchers.IO) {
+    suspend fun clearFavorites(confirmed: Boolean): FavouritesResult = withContext(Dispatchers.IO) {
+        if (!confirmed) {
+            throw AppFunctionInvalidArgumentException("Not confirmed. Ask the user, then call again with confirmed = true.")
+        }
         clearFavouritesUseCase()
         FavouritesResult(added = 0, total = 0)
+    }
+
+    private companion object {
+        const val MAX_IDS = 20
     }
 
     private fun DomainTalk.toTalk() = Talk(id = id, title = title, track = track, start = start, room = room)

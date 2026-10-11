@@ -21,7 +21,7 @@ case "${1:-help}" in
   search)    run searchTalks "{\"track\": \"${2:-android}\"${3:+, \"after\": \"$3\"}}" ;;
   favourites) run getFavourites '{}' ;;
   add)       shift; ids=$(printf '"%s",' "$@"); run addToFavorites "{\"talkIds\": [${ids%,}]}" ;;
-  clear)     run clearFavorites '{}' ;;
+  clear)     run clearFavorites '{"confirmed": true}' ;;
   stop)      $ADB shell am force-stop "$PKG" ;;
   disable)   $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state disable ;;
   enable)    $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state enable ;;
