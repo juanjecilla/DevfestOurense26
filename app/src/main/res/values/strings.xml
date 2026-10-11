@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DevFest Ourense</string>
+    <string name="appfunctions_description">Search the DevFest Ourense agenda and manage your favourite talks.</string>
 </resources>
