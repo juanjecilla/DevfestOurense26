@@ -13,6 +13,11 @@ An agenda app with favourites. The talks in it are **sample data** (made up titl
 
 If something breaks on stage, `git switch <branch>` and reinstall.
 
+## Requirements
+Android Studio / JDK 17+, Android SDK with platform 37, a device with the `app_function` shell command
+(Android 17 / API 37.x; the first Android 16 GA build lacks it). Pinned: AGP 9.1.1, Kotlin 2.4.20, Hilt 2.60.1,
+`androidx.appfunctions 1.0.0-alpha10`.
+
 ## Build and run
 
 ```bash
@@ -40,6 +45,9 @@ di/        Hilt modules
 | `getFavourites()` | query | Favourites ordered by start time |
 | `addToFavorites(talkIds)` | mutation | Idempotent; 1..20 ids; unknown id → `AppFunctionElementNotFoundException` |
 | `clearFavorites(confirmed)` | mutation, destructive | Refuses unless `confirmed = true` |
+
+**Swapping the sample talks for the real ones:** `docs/REAL-TALKS.md`. **Running the live demo:** `docs/DEMO.md`.
+**How the skill was applied:** `docs/appfunctions/` (discovery) and the commits of branch `02-appfunctions-skill`.
 
 `functionId` is `com.example.devfest.appfunctions.BaseAgendaAppFunctionService#<function>`: the id uses the abstract
 *Base* class, not the generated service. See `docs/DEMO.md` to run the demo and `docs/appfunctions/` for the skill workflow.
