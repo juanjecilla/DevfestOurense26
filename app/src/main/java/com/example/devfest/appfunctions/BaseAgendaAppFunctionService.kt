@@ -87,7 +87,9 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
     @AppFunction(isDescribedByKDoc = true)
     suspend fun clearFavorites(confirmed: Boolean): FavouritesResult = withContext(Dispatchers.IO) {
         if (!confirmed) {
-            throw AppFunctionInvalidArgumentException("Not confirmed. Ask the user, then call again with confirmed = true.")
+            throw AppFunctionInvalidArgumentException(
+                "Not confirmed. Ask the user, then call again with confirmed = true.",
+            )
         }
         clearFavouritesUseCase()
         FavouritesResult(added = 0, total = 0)
