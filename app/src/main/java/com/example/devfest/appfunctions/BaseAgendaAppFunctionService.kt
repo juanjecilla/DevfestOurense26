@@ -37,7 +37,8 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      * Required workflow: Call this before "addToFavorites" to obtain valid talk IDs.
      *
      * @param track Track: "android", "web", "cloud", "ai" or "general". Null searches all.
-     * @param after Earliest start time as HH:mm, local to the event, e.g. "14:00". Null: whole day.
+     * @param after Earliest start time as HH:mm, local to the event, e.g. "14:00".
+     *   Null: whole day.
      * @return Talks ordered by start time. Empty list when nothing matches.
      */
     @AppFunction(isDescribedByKDoc = true)
