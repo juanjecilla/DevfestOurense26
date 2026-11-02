@@ -1,7 +1,7 @@
 package com.example.devfest.appfunctions
 
 import androidx.annotation.RequiresApi
-import androidx.appfunctions.AppFunction
+import androidx.appfunctions.AppFunctionDeclaration
 import androidx.appfunctions.AppFunctionElementNotFoundException
 import androidx.appfunctions.AppFunctionInvalidArgumentException
 import androidx.appfunctions.AppFunctionLimitExceededException
@@ -41,7 +41,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      *   Null: whole day.
      * @return Talks ordered by start time. Empty list when nothing matches.
      */
-    @AppFunction(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true)
     suspend fun searchTalks(
         track: String? = null,
         after: String? = null,
@@ -60,7 +60,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      *
      * @return Favourite talks. Empty list when none is saved.
      */
-    @AppFunction(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true)
     suspend fun getFavourites(): List<Talk> = withContext(Dispatchers.IO) {
         getFavouritesUseCase().map { it.toTalk() }
     }
@@ -73,7 +73,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      *   If an ID is unknown the call fails and nothing is saved.
      * @return Number of talks newly added and total favourites after the call.
      */
-    @AppFunction(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true)
     suspend fun addToFavorites(talkIds: List<String>): FavouritesResult = withContext(Dispatchers.IO) {
         if (talkIds.isEmpty()) throw AppFunctionInvalidArgumentException("talkIds must not be empty")
         if (talkIds.size > MAX_IDS) throw AppFunctionLimitExceededException("At most $MAX_IDS ids per call")
@@ -91,7 +91,7 @@ abstract class BaseAgendaAppFunctionService : AppFunctionService() {
      * @param confirmed True only after the user explicitly agreed to clear all favourites.
      * @return Result with zero favourites.
      */
-    @AppFunction(isDescribedByKDoc = true)
+    @AppFunctionDeclaration(isDescribedByKDoc = true)
     suspend fun clearFavorites(confirmed: Boolean): FavouritesResult = withContext(Dispatchers.IO) {
         if (!confirmed) {
             throw AppFunctionInvalidArgumentException(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/androidx.appfunctions"
-    appfn:description="This app exposes the DevFest Ourense agenda and the user's favourite talks.
+    appfn:instructions="This app exposes the DevFest Ourense agenda and the user's favourite talks.
 
     Operational Patterns:
     - Use 'searchTalks' to resolve talks to IDs before calling 'addToFavorites'.
