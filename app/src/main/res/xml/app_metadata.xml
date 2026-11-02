@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AppFunctionAppMetadata xmlns:appfn="http://schemas.android.com/apk/androidx.appfunctions"
-    appfn:instructions="This app shows the DevFest Ourense 2026 agenda (7 Nov 2026) and the user's favourite sessions.
+    appfn:instructions="DevFest Ourense 2026 agenda (7 Nov) and the user's favourite sessions.
 
     Operational Patterns:
-    - Use 'searchTalks' to resolve sessions to IDs before calling 'addToFavorites'.
-    - Prefer one 'addToFavorites' call with several IDs over repeated calls.
-    - To find a session by speaker or title, pass the text as 'query' to 'searchTalks'.
+    - Resolve sessions with 'searchTalks' before calling 'addToFavorites'.
+    - Prefer one 'addToFavorites' call with several IDs.
+    - Find a session by speaker or title with the 'query' of 'searchTalks'.
 
     Constraints:
-    - 'clearFavorites' is irreversible: confirm with the user before calling it.
-    - Times are local to the event (Europe/Madrid) and formatted HH:mm.
-    - Tracks are an unofficial classification: ai, android, web, demo, general."
+    - 'clearFavorites' is irreversible: confirm with the user first.
+    - Times are local to the event, formatted HH:mm.
+    - Tracks are an unofficial classification."
     appfn:displayDescription="@string/appfunctions_description" />
