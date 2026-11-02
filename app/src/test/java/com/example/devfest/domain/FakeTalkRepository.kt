@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class FakeTalkRepository(private val talks: List<Talk>) : TalkRepository {
     private val favourites = MutableStateFlow<Set<String>>(emptySet())
 
-    override suspend fun search(track: String?, after: LocalTime?): List<Talk> =
+    override suspend fun search(track: String?, after: LocalTime?, query: String?): List<Talk> =
         talks.filter { track == null || it.track.equals(track, true) }
             .filter { after == null || !it.start.isBefore(after) }
+            .filter { query == null || it.title.contains(query, true) || it.speaker.orEmpty().contains(query, true) }
             .sortedBy { it.start }
 
     override suspend fun get(id: String): Talk? = talks.firstOrNull { it.id == id }

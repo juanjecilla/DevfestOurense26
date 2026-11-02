@@ -7,9 +7,10 @@ import org.junit.Test
 
 class UseCasesTest {
     private val talks = listOf(
-        Talk("a", "Morning android", "android", LocalTime.of(10, 0), 40, "A"),
-        Talk("b", "Afternoon android", "android", LocalTime.of(15, 0), 40, "A"),
-        Talk("c", "Afternoon web", "web", LocalTime.of(15, 0), 40, "B"),
+        Talk("a", "Morning android", "Ana", "android", LocalTime.of(10, 0), "A"),
+        Talk("b", "Afternoon android", "Beto", "android", LocalTime.of(15, 0), "A"),
+        Talk("c", "Afternoon web", "Ana", "web", LocalTime.of(15, 0), "B"),
+        Talk("d", "Coffee", null, "general", LocalTime.of(12, 0), "Hall"),
     )
     private val repository = FakeTalkRepository(talks)
 
@@ -21,7 +22,21 @@ class UseCasesTest {
 
     @Test
     fun `search treats a blank track as all tracks`() = runTest {
-        assertEquals(3, SearchTalks(repository)(track = "  ").size)
+        assertEquals(4, SearchTalks(repository)(track = "  ").size)
+    }
+
+    @Test
+    fun `search matches the title or the speaker, ignoring case`() = runTest {
+        val search = SearchTalks(repository)
+        assertEquals(listOf("a", "c"), search(query = "ana").map { it.id })
+        assertEquals(listOf("d"), search(query = "COFFEE").map { it.id })
+    }
+
+    @Test
+    fun `a blank query is no filter, and breaks have no speaker`() = runTest {
+        val all = SearchTalks(repository)(query = "   ")
+        assertEquals(4, all.size)
+        assertEquals(null, all.single { it.id == "d" }.speaker)
     }
 
     @Test

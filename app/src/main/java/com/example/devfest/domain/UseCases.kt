@@ -5,8 +5,12 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class SearchTalks @Inject constructor(private val repository: TalkRepository) {
-    suspend operator fun invoke(track: String? = null, after: LocalTime? = null): List<Talk> =
-        repository.search(track?.trim()?.takeIf { it.isNotEmpty() }, after)
+    suspend operator fun invoke(track: String? = null, after: LocalTime? = null, query: String? = null): List<Talk> =
+        repository.search(
+            track?.trim()?.takeIf { it.isNotEmpty() },
+            after,
+            query?.trim()?.takeIf { it.isNotEmpty() },
+        )
 }
 
 class GetTalk @Inject constructor(private val repository: TalkRepository) {

@@ -12,11 +12,12 @@ class DefaultTalkRepository @Inject constructor(
     private val favourites: FavouritesStore,
 ) : TalkRepository {
 
-    override suspend fun search(track: String?, after: LocalTime?): List<Talk> =
+    override suspend fun search(track: String?, after: LocalTime?, query: String?): List<Talk> =
         TalkCatalog.talks
             .filter { track == null || it.track.equals(track, ignoreCase = true) }
             .filter { after == null || !it.start.isBefore(after) }
-            .sortedBy { it.start }
+            .filter { query == null || it.title.contains(query, ignoreCase = true) || it.speaker.orEmpty().contains(query, ignoreCase = true) }
+            .sortedWith(compareBy({ it.start }, { it.room }))
 
     override suspend fun get(id: String): Talk? = TalkCatalog.talks.firstOrNull { it.id == id }
 

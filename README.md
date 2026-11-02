@@ -1,7 +1,8 @@
 # DevFest Ourense 26 · AppFunctions demo
 
 Demo app for the talk *Turn your app into a skill with App Functions* (DevFest Ourense 2026).
-An agenda app with favourites. The talks in it are **sample data** (made up titles, times and rooms).
+An agenda app with favourites. Since 2026-11-02 the agenda is the **real DevFest Ourense 2026 one** (23 sessions, `docs/AGENDA-SYNC.md`);
+the `track` of each session is our own classification.
 
 ## Branches = checkpoints
 
@@ -9,14 +10,15 @@ An agenda app with favourites. The talks in it are **sample data** (made up titl
 | --- | --- | --- |
 | `01-base-agenda` | `cp-01-base` | Plain app: Compose + Hilt + DataStore, clean layers, no AppFunctions |
 | `02-appfunctions-skill` | `cp-02a-skill-installed` → `cp-02b-implemented` → `cp-02c-kdoc-refined` → `cp-02d-adb-script` | The same app, AppFunctions added by following the official Android skill, step by step (`.claude/skills/appfunctions`, steps in `docs/appfunctions/`) |
-| `03-final` / `main` | `cp-04-final` | Hardened for agents: id limit, typed errors, explicit `confirmed` flag for the destructive function, domain use case instead of repository access |
+| `03-final` | `cp-04-final` | (alpha10) Hardened for agents: id limit, typed errors, explicit `confirmed` flag for the destructive function, domain use case instead of repository access |
+| `04-real-agenda-beta01` = `main` | `cp-05a-beta01` → `cp-05b-real-agenda` | Migrated to `androidx.appfunctions 1.0.0-beta01` (skill's upgrade guide, one commit), then the real DevFest Ourense 2026 agenda with `speaker` and a `query` search |
 
 If something breaks on stage, `git switch <branch>` and reinstall.
 
 ## Requirements
 Android Studio / JDK 17+, Android SDK with platform 37, a device with the `app_function` shell command
 (Android 17 / API 37.x; the first Android 16 GA build lacks it). Pinned: AGP 9.1.1, Kotlin 2.4.20, Hilt 2.60.1,
-`androidx.appfunctions 1.0.0-alpha10`.
+`androidx.appfunctions 1.0.0-beta01` (checked 2026-11-02: the official skill and samples use it; the developer docs still show alpha10).
 
 ## Build and run
 
@@ -33,7 +35,7 @@ Versions are pinned in `gradle/libs.versions.toml` (AGP 9.1.1, Kotlin 2.4.20, Hi
 ```
 ui/        Compose screen + ViewModel            (driving adapter)
 domain/    Talk, TalkRepository, use cases        (business rules)
-data/      DefaultTalkRepository, FavouritesStore (DataStore), TalkCatalog (sample data)
+data/      DefaultTalkRepository, FavouritesStore (DataStore), TalkCatalog (real agenda)
 di/        Hilt modules
 ```
 
@@ -41,12 +43,12 @@ di/        Hilt modules
 
 | Function | Kind | Notes |
 | --- | --- | --- |
-| `searchTalks(track?, after?)` | query | Returns `List<Talk>`; resolves talks to ids |
+| `searchTalks(track?, after?, query?)` | query | Returns `List<Talk>` (with `speaker`); `after` is `"HH:mm"`; `query` matches title or speaker |
 | `getFavourites()` | query | Favourites ordered by start time |
 | `addToFavorites(talkIds)` | mutation | Idempotent; 1..20 ids; unknown id → `AppFunctionElementNotFoundException` |
 | `clearFavorites(confirmed)` | mutation, destructive | Refuses unless `confirmed = true` |
 
-**Swapping the sample talks for the real ones:** `docs/REAL-TALKS.md`. **Running the live demo:** `docs/DEMO.md`.
+**Where the agenda comes from and how to refresh it:** `docs/AGENDA-SYNC.md`. **Running the live demo:** `docs/DEMO.md`.
 **How the skill was applied:** `docs/appfunctions/` (discovery) and the commits of branch `02-appfunctions-skill`.
 
 `functionId` is `com.example.devfest.appfunctions.BaseAgendaAppFunctionService#<function>`: the id uses the abstract

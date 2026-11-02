@@ -4,8 +4,11 @@ import java.time.LocalTime
 import kotlinx.coroutines.flow.Flow
 
 interface TalkRepository {
-    /** Talks of [track] (all tracks when null) starting at or after [after] (any time when null), by start time. */
-    suspend fun search(track: String?, after: LocalTime?): List<Talk>
+    /**
+     * Sessions of [track] (all tracks when null) starting at or after [after] (any time when null) whose title or
+     * speaker contains [query] (no text filter when null), by start time.
+     */
+    suspend fun search(track: String?, after: LocalTime?, query: String? = null): List<Talk>
 
     suspend fun get(id: String): Talk?
 

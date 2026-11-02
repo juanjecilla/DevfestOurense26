@@ -19,7 +19,11 @@ case "${1:-help}" in
   check)     $ADB shell cmd app_function help ;;
   list)      $ADB shell cmd app_function list-app-functions --package "$PKG" ;;
   enabled)   $ADB shell cmd app_function is-enabled --package "$PKG" --function "$SVC#${2:?function name}" ;;
-  search)    run searchTalks "{\"track\": \"${2:-android}\"${3:+, \"after\": \"$3\"}}" ;;
+  search)    # search [track] [after HH:mm] [query]   ("" skips a filter), e.g. search ai 15:00 | search "" "" gema
+             j=""; [ -n "${2:-}" ] && j="\"track\": \"$2\""
+             [ -n "${3:-}" ] && j="${j:+$j, }\"after\": \"$3\""
+             [ -n "${4:-}" ] && j="${j:+$j, }\"query\": \"$4\""
+             run searchTalks "{$j}" ;;
   favourites) run getFavourites '{}' ;;
   add)       shift; ids=$(printf '"%s",' "$@"); run addToFavorites "{\"talkIds\": [${ids%,}]}" ;;
   clear)     run clearFavorites '{"confirmed": true}' ;;
@@ -28,7 +32,7 @@ case "${1:-help}" in
   enable)    $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state enable ;;
   reset)     $ADB shell cmd app_function set-enabled --package "$PKG" --function "$SVC#${2:?function name}" --state default ;;
   *) cat <<USAGE
-check | list | enabled <function> | search [track] [after HH:mm] | favourites | add <id>... | clear | stop | disable|enable|reset <function>
+check | list | enabled <function> | search [track] [after HH:mm] [query] | favourites | add <id>... | clear | stop | disable|enable|reset <function>
 USAGE
   ;;
 esac

@@ -2,14 +2,16 @@ package com.example.devfest.appfunctions
 
 import androidx.appfunctions.AppFunctionSerializable
 
-/** A talk in the DevFest Ourense agenda. */
+/** A session of the DevFest Ourense agenda: a talk, a startup demo or a break. */
 @AppFunctionSerializable(isDescribedByKDoc = true)
 data class Talk(
     /** Stable talk ID. Pass it to "addToFavorites". */
     val id: String,
-    /** Talk title. */
+    /** Session title, in the language the organisers published it. */
     val title: String,
-    /** Track name in lowercase: "android", "web", "cloud", "ai" or "general". */
+    /** Speaker name. Null for breaks and unconfirmed slots. */
+    val speaker: String?,
+    /** Track in lowercase: "ai", "android", "web", "demo" or "general". */
     val track: String,
     /** Start time as HH:mm, local to the event. */
     val start: String,

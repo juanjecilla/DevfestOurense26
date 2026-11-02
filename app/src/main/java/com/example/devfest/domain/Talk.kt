@@ -2,12 +2,13 @@ package com.example.devfest.domain
 
 import java.time.LocalTime
 
-/** A talk in the agenda. Sample data: see [com.example.devfest.data.TalkCatalog]. */
+/** A session of the agenda (talk, demo, break…). Data: see [com.example.devfest.data.TalkCatalog]. */
 data class Talk(
     val id: String,
     val title: String,
+    /** Null for breaks and unconfirmed slots. */
+    val speaker: String?,
     val track: String,
     val start: LocalTime,
-    val durationMinutes: Int,
     val room: String,
 )

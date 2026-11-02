@@ -93,6 +93,7 @@ private fun TalkList(talks: List<Talk>, favouriteIds: Set<String>, onToggle: (Ta
                 modifier = Modifier.clickable { onToggle(talk) },
                 overlineContent = { Text("${talk.start.format(TimeFormat)} · ${talk.room} · ${talk.track}") },
                 headlineContent = { Text(talk.title) },
+                supportingContent = talk.speaker?.let { speaker -> { Text(speaker) } },
                 trailingContent = {
                     Text(
                         if (talk.id in favouriteIds) "★" else "☆",
