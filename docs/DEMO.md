@@ -54,7 +54,7 @@ The agenda is the **real DevFest Ourense 2026 one** (`docs/AGENDA-SYNC.md`). `YA
 8. **Testing Agent**: see `docs/TESTING-AGENT.md` (privileged via shell identity, LLM mode needs your own Gemini key).
 
 ## Backups
-- **Real captured outputs** of every adb step: `docs/captures/` (regenerate with `SERIAL=<serial> scripts/capture-demo.sh`
+- **Real captured outputs** of every adb step: `docs/captures/` (empty until re-captured, see its README) (regenerate with `SERIAL=<serial> scripts/capture-demo.sh`
   after changing the agenda or functions). The deck's backup scene is generated from them (`scripts/gen-code.py`).
 - Branches/tags are checkpoints: `git switch 02-appfunctions-skill` (skill output, minimal then refined KDoc),
   `git switch 01-base-agenda` (before AppFunctions).
