@@ -1,7 +1,7 @@
 # AppFunctions Testing Agent
 
 Official tool: `github.com/android/appfunctions` → `agent/` (Apache-2.0). Package `com.example.appfunctions.agent`.
-Read from its README and `run_privileged.sh` on 2026-10-11 (**not yet run by us**).
+Read from its README and scripts on 2026-10-11 (checked again 2026-11-02, commit `0bb367a2`); **run by us on 2026-11-02**, see "Run".
 
 ## What it is
 Manual debugging with deterministic inputs, test automation, and an **LLM agent** to evaluate functions.
