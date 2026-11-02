@@ -1,0 +1,3 @@
+androidAppfunctionsReturnValue:
+  added: 2
+  total: 2

@@ -1,0 +1,1 @@
+Error executing app function: android.app.appfunctions.AppFunctionException: The app function is disabled (code 1002). See logcat for more details. 

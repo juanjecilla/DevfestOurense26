@@ -1,0 +1,6 @@
+androidAppfunctionsReturnValue:
+  id: t20
+  room: Red Velvet
+  start: "18:15"
+  title: Pendiente de confirmar
+  track: demo

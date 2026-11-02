@@ -1,0 +1,7 @@
+androidAppfunctionsReturnValue:
+  speaker: Gema Socorro
+  id: t16
+  room: Honeycomb
+  start: "16:15"
+  title: "Set Sail for the Grand Line: Charting Android Apps with Agents and Android CLI"
+  track: android

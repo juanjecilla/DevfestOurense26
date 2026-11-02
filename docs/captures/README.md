@@ -1,11 +1,10 @@
 # Captured demo outputs
 
-Empty on purpose until the sequence is re-run on a device with the real agenda and beta01 (2026-11-02).
-The previous captures (alpha10, sample agenda, Pixel 9 Pro, 2026-10-11) were never committed here (the Android
-template `.gitignore` ignored every `captures/` folder; fixed on 2026-11-02). Copies of them are in the deck repo history
-(`reference/demo-captures/`, commit `25ec6a9` of the `slideshow` repo, branch `talk/app-functions-devfest26`).
+Real adb outputs of the demo sequence: **Pixel 9 Pro, Android 17 (API 37.1), `androidx.appfunctions 1.0.0-beta01`, real agenda, captured 2026-11-02**.
+They feed the backup scene of the talk (deck repo: `python3 -I scripts/gen-code.py`).
 
+Re-capture after changing the agenda or the functions:
 ```bash
-SERIAL=<adb serial> scripts/capture-demo.sh      # writes 01-list.txt … 10-tbc.txt here
+SERIAL=<adb serial> scripts/capture-demo.sh      # rewrites 01-list.txt … 10-tbc.txt
 ```
-Then, in the deck repo: `python3 -I scripts/gen-code.py` (the backup scene appears automatically when captures exist).
+The 2026-10-11 captures (alpha10, sample agenda) were never committed (the Android template `.gitignore` ignored every `captures/` folder; fixed 2026-11-02).

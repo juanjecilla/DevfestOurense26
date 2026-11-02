@@ -1,0 +1,13 @@
+androidAppfunctionsReturnValue:
+  - speaker: Susanna Wong
+    id: t15
+    room: Red Velvet
+    start: "16:00"
+    title: "When Software Stops Being Deterministic: Engineering Practices for AI-Native Systems"
+    track: ai
+  - speaker: Eric Risco
+    id: t21
+    room: Red Velvet
+    start: "18:30"
+    title: "Enseñando cultura, costumbres e idioma a Gemma 4"
+    track: ai
