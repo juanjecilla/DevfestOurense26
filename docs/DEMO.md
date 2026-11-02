@@ -24,7 +24,7 @@ All of this worked: `check`, `list` (4 functions, `functionId` = Base class), `s
 `add nope` (1500 element not found), 21 ids (1501 limit exceeded), `search "" 25:99` (1001 invalid argument), `clearFavorites` without `confirmed` (1001, refuses), app force-stopped then
 `search "" "" gema` (the call starts the process: t16 Gema Socorro), `search demo 18:00` and `search "" 18:15` (the unconfirmed slot t20), `disable`/`enabled`/`reset`
 (1002 function disabled), a break comes back without `speaker` (nullable property omitted). Real outputs: `docs/captures/`.
-Not verified: the Testing Agent (see `docs/TESTING-AGENT.md`) and Gemini (EAP).
+Testing Agent (manual mode, `standard` flavor): verified 2026-11-02, see `docs/TESTING-AGENT.md` (`scripts/start-testing-agent.sh`). Not verified: its LLM mode (needs a Gemini API key) and Gemini (EAP).
 The phone's `/data` was 100 % full (808 MB free) during the test: free space before the event.
 
 **`LocalTime` as an input (beta01, tested on the device 2026-11-02 with a scratch function, since discarded):** works **only as an object with all four fields**
